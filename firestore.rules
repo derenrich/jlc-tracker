@@ -1,0 +1,21 @@
+rules_version = '2';
+
+// Everything is public read-only; the ingest job writes via the Admin SDK,
+// which bypasses these rules.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /parts/{code} {
+      allow read: if true;
+      allow write: if false;
+
+      match /history/{year} {
+        allow read: if true;
+        allow write: if false;
+      }
+    }
+    match /meta/{doc} {
+      allow read: if true;
+      allow write: if false;
+    }
+  }
+}

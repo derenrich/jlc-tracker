@@ -1,0 +1,40 @@
+name: daily ingest
+
+on:
+  schedule:
+    # 02:47 UTC daily; odd minute to avoid the top-of-hour rush of scheduled jobs.
+    - cron: '47 2 * * *'
+  workflow_dispatch:
+
+concurrency: ingest
+
+jobs:
+  ingest:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: ingest/package-lock.json
+
+      - run: npm ci
+        working-directory: ingest
+
+      - name: Fetch and write snapshot
+        run: node src/ingest.mjs
+        working-directory: ingest
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+
+      - name: Commit raw archive
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email 'github-actions[bot]@users.noreply.github.com'
+          git add data/raw
+          git diff --cached --quiet || git commit -m "raw snapshot $(date -u +%F)"
+          git push

@@ -1,0 +1,69 @@
+{
+  "code": "C1002",
+  "model": "GZ1608D601TF",
+  "brand": "Sunlord",
+  "description": "-55\u2103~+125\u2103 1 200mA 450m\u03a9 600\u03a9@100MHz \u00b125% 0603 Ferrite Beads ROHS",
+  "category": "Ferrite Beads",
+  "subcategory": "Filters",
+  "package": "0603",
+  "libraryType": "base",
+  "stock": 1201019,
+  "minOrder": 20,
+  "prices": [
+    {
+      "qty": 1,
+      "price": 0.0187
+    },
+    {
+      "qty": 200,
+      "price": 0.0163
+    },
+    {
+      "qty": 600,
+      "price": 0.0151
+    },
+    {
+      "qty": 4000,
+      "price": 0.0143
+    },
+    {
+      "qty": 8000,
+      "price": 0.0139
+    },
+    {
+      "qty": 20000,
+      "price": 0.0137
+    }
+  ],
+  "attributes": [
+    {
+      "name": "Operating Temperature",
+      "value": "-55\u2103~+125\u2103"
+    },
+    {
+      "name": "Impedance @ Frequency",
+      "value": "600\u03a9@100MHz"
+    },
+    {
+      "name": "Tolerance",
+      "value": "\u00b125%"
+    },
+    {
+      "name": "Current Rating",
+      "value": "200mA"
+    },
+    {
+      "name": "Number of Circuits",
+      "value": "1"
+    },
+    {
+      "name": "DC Resistance(DCR)",
+      "value": "450m\u03a9"
+    }
+  ],
+  "lcscUrl": "https://www.lcsc.com/product-detail/ferrite-beads_sunlord-gz1608d601tf_C1002.html",
+  "jlcUrl": "https://jlcpcb.com/partdetail/Sunlord-GZ1608D601TF/C1002",
+  "datasheetUrl": "https://www.lcsc.com/datasheet/lcsc_datasheet_2310301640_Sunlord-GZ1608D601TF_C1002.pdf",
+  "updatedAt": "2026-07-14",
+  "image": "data:image/jpeg;base64,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"
+}

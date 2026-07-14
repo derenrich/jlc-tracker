@@ -1,0 +1,17 @@
+{
+  "name": "jlc-tracker-ingest",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=20"
+  },
+  "scripts": {
+    "ingest": "node src/ingest.mjs",
+    "ingest:dry": "node src/ingest.mjs --dry-run",
+    "backfill": "node src/backfill.mjs",
+    "backfill:dry": "node src/backfill.mjs --dry-run"
+  },
+  "dependencies": {
+    "firebase-admin": "^13.0.0"
+  }
+}

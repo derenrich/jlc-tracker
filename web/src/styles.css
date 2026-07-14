@@ -1,0 +1,366 @@
+:root {
+  --bg: #fafaf9;
+  --surface: #ffffff;
+  --text: #1c1917;
+  --muted: #78716c;
+  --border: #e7e5e4;
+  --accent: #2f6f8f;
+  --accent-ink: #24576f;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 15px/1.55 -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial,
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+a {
+  color: var(--accent-ink);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 2px;
+}
+
+.mono {
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 0.95em;
+}
+
+h1 {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin: 0 0 0.25rem;
+}
+
+h2 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+  margin: 0 0 0.75rem;
+}
+
+/* --- home ---------------------------------------------------------- */
+
+.home {
+  max-width: 560px;
+  margin: 0 auto;
+  padding: 18vh 1.25rem 2rem;
+  text-align: center;
+}
+
+.home h1 {
+  font-size: 1.6rem;
+}
+
+.tagline {
+  color: var(--muted);
+  margin: 0 0 2rem;
+}
+
+.hint,
+.status {
+  color: var(--muted);
+  font-size: 0.85rem;
+}
+
+.status {
+  margin-top: 3rem;
+}
+
+/* --- search -------------------------------------------------------- */
+
+.search-row {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.search input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.5rem 0.75rem;
+  font: inherit;
+  color: inherit;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.search input:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.search button {
+  padding: 0.5rem 1rem;
+  font: inherit;
+  color: #fff;
+  background: var(--accent);
+  border: 1px solid var(--accent);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search button:hover {
+  background: var(--accent-ink);
+}
+
+.search-large input {
+  padding: 0.7rem 0.9rem;
+  font-size: 1rem;
+}
+
+.search-large button {
+  padding: 0.7rem 1.2rem;
+  font-size: 1rem;
+}
+
+.search-error {
+  margin: 0.5rem 0 0;
+  font-size: 0.85rem;
+  color: #b3452c;
+  text-align: left;
+}
+
+/* --- part page ----------------------------------------------------- */
+
+.topbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem;
+}
+
+.topbar .search {
+  flex: 1;
+  max-width: 420px;
+  margin-left: auto;
+}
+
+.wordmark {
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.part {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0.5rem 1.25rem 3rem;
+}
+
+.notice {
+  margin: 3rem auto;
+  max-width: 480px;
+  text-align: center;
+  color: var(--muted);
+}
+
+.part-head {
+  display: flex;
+  gap: 1.25rem;
+  align-items: flex-start;
+  margin-bottom: 1.25rem;
+}
+
+.part-image {
+  width: 96px;
+  height: 96px;
+  object-fit: contain;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  flex-shrink: 0;
+}
+
+.part-sub {
+  color: var(--muted);
+  font-size: 0.85rem;
+  margin: 0.15rem 0;
+}
+
+.part-desc {
+  margin: 0.5rem 0;
+  max-width: 62ch;
+}
+
+.part-links {
+  margin: 0.5rem 0 0;
+  display: flex;
+  gap: 1rem;
+  font-size: 0.9rem;
+}
+
+/* --- stats --------------------------------------------------------- */
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 1.25rem;
+}
+
+.stat {
+  background: var(--surface);
+  padding: 0.75rem 1rem;
+  display: flex;
+  flex-direction: column;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.stat-value {
+  font-size: 1.15rem;
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- cards & tables ------------------------------------------------- */
+
+.card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.25rem;
+  align-items: start;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+td {
+  padding: 0.35rem 0;
+  border-bottom: 1px solid var(--border);
+  vertical-align: top;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+td.num {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.fineprint {
+  color: var(--muted);
+  font-size: 0.8rem;
+}
+
+/* --- chart --------------------------------------------------------- */
+
+.chart-controls {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 0.5rem;
+}
+
+.seg {
+  display: inline-flex;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.seg button {
+  font: inherit;
+  font-size: 0.85rem;
+  padding: 0.25rem 0.75rem;
+  background: var(--surface);
+  color: var(--muted);
+  border: none;
+  border-right: 1px solid var(--border);
+  cursor: pointer;
+}
+
+.seg button:last-child {
+  border-right: none;
+}
+
+.seg button.active {
+  background: var(--bg);
+  color: var(--text);
+  font-weight: 500;
+}
+
+.chart svg {
+  display: block;
+}
+
+.chart-grid {
+  stroke: var(--border);
+}
+
+.chart-label {
+  fill: var(--muted);
+  font-size: 11px;
+}
+
+.chart-line {
+  stroke: var(--accent);
+  stroke-width: 1.5;
+}
+
+.chart-cursor {
+  stroke: var(--muted);
+  stroke-dasharray: 3 3;
+}
+
+.chart-dot {
+  fill: var(--accent);
+}
+
+.chart-readout {
+  min-height: 1.4em;
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+
+.chart-empty {
+  color: var(--muted);
+  font-size: 0.9rem;
+  padding: 2rem 0;
+  text-align: center;
+}
+
+@media (max-width: 560px) {
+  .topbar {
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+  .part-head {
+    flex-direction: column;
+  }
+}
