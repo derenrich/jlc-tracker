@@ -1,6 +1,7 @@
 import { BrowserRouter, Navigate, Route, Routes, useParams } from 'react-router-dom';
 import Home from './pages/Home';
 import PartPage from './pages/Part';
+import Trends from './pages/Trends';
 
 // Normalizes /p/1002 or /p/c1002 to /p/C1002 so history docs and shared links
 // agree on one canonical URL per part.
@@ -17,6 +18,7 @@ export default function App() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/trends" element={<Trends />} />
         <Route path="/p/:code" element={<CanonicalPart />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

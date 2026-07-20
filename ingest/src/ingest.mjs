@@ -11,6 +11,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { brotliCompressSync, constants as zlibConstants } from 'node:zlib';
 
+import { computeIndexSeries } from './index-series.mjs';
 import { DEFAULT_QUERY, fetchAllComponents, fetchImageDataUri } from './jlc.mjs';
 import { historyEntry, partDoc } from './part-doc.mjs';
 
@@ -122,10 +123,16 @@ for (const item of components) {
     { merge: true }
   );
 }
+// The overall price index is recomputed from all archives (this run's
+// snapshot included) — needs an up-to-date data/raw, which the CI checkout
+// always has.
+const indexSeries = computeIndexSeries(rawDir);
+writer.set(db.collection('meta').doc('index'), { entries: indexSeries });
+
 writer.set(db.collection('meta').doc('status'), {
   lastRun: new Date().toISOString(),
   date: today,
   partCount: components.length,
 });
 await writer.close();
-log(`wrote ${components.length} parts + history for ${today}`);
+log(`wrote ${components.length} parts + history + ${indexSeries.length}-day index for ${today}`);

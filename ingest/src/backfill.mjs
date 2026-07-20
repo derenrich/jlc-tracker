@@ -16,6 +16,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { brotliDecompressSync, gunzipSync } from 'node:zlib';
 
+import { computeIndexSeries } from './index-series.mjs';
 import { historyEntry, partDoc } from './part-doc.mjs';
 
 const dryRun = process.argv.includes('--dry-run');
@@ -58,6 +59,9 @@ for (const file of files) {
 const historyDocCount = [...parts.values()].reduce((n, p) => n + p.entriesByYear.size, 0);
 log(`${parts.size} parts, ${historyDocCount} history docs to write`);
 
+const indexSeries = computeIndexSeries(rawDir);
+log(`index series: ${indexSeries.length} days, latest ${JSON.stringify(indexSeries[indexSeries.length - 1])}`);
+
 if (dryRun) {
   const sample = parts.get([...parts.keys()][0]);
   log(`dry run: sample part doc:\n${JSON.stringify(partDoc(sample.latestItem, sample.latestDate), null, 2)}`);
@@ -83,6 +87,7 @@ for (const [code, part] of parts) {
     writer.set(ref.collection('history').doc(year), { entries: [...byDate.values()] });
   }
 }
+writer.set(db.collection('meta').doc('index'), { entries: indexSeries });
 writer.set(db.collection('meta').doc('status'), {
   lastRun: new Date().toISOString(),
   date: latestDate,

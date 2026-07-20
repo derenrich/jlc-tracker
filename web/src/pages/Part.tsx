@@ -3,11 +3,7 @@ import { Link, useParams } from 'react-router-dom';
 import PriceChart, { ChartPoint } from '../components/PriceChart';
 import SearchBox from '../components/SearchBox';
 import { getHistory, getPart, HistoryPoint, Part } from '../lib/data';
-
-// Up to 5 decimals so closely spaced chart axis ticks stay distinguishable.
-const usd = (v: number) =>
-  `$${v.toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 5 })}`;
-const count = (v: number) => v.toLocaleString();
+import { compact, count, usd } from '../lib/format';
 
 const RANGES = [
   { label: '3m', days: 92 },
@@ -167,7 +163,11 @@ export default function PartPage() {
                   ))}
                 </div>
               </div>
-              <PriceChart points={points} format={metric === 'price' ? usd : count} />
+              <PriceChart
+                points={points}
+                format={metric === 'price' ? usd : count}
+                axisFormat={metric === 'price' ? usd : compact}
+              />
             </section>
 
             <div className="detail-grid">

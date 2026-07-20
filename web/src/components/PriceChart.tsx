@@ -9,6 +9,9 @@ export interface ChartPoint {
 interface Props {
   points: ChartPoint[];
   format: (v: number) => string;
+  // Optional tighter formatter for y-axis labels (e.g. 800M); the hover
+  // readout keeps the full-precision `format`.
+  axisFormat?: (v: number) => string;
 }
 
 const HEIGHT = 240;
@@ -24,7 +27,7 @@ const shortDate = (d: string) =>
     timeZone: 'UTC',
   });
 
-export default function PriceChart({ points, format }: Props) {
+export default function PriceChart({ points, format, axisFormat = format }: Props) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const [width, setWidth] = useState(0);
   const [hover, setHover] = useState<number | null>(null);
@@ -91,7 +94,7 @@ export default function PriceChart({ points, format }: Props) {
             <g key={t}>
               <line className="chart-grid" x1={PAD.left} x2={width - PAD.right} y1={y(t)} y2={y(t)} />
               <text className="chart-label" x={PAD.left - 8} y={y(t) + 3} textAnchor="end">
-                {format(t)}
+                {axisFormat(t)}
               </text>
             </g>
           ))}

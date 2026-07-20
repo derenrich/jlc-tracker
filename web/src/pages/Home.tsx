@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import SearchBox from '../components/SearchBox';
 import { getStatus, Status } from '../lib/data';
 
@@ -17,7 +18,8 @@ export default function Home() {
       </p>
       <SearchBox large autoFocus />
       <p className="hint">
-        Try <a href="/p/C1002">C1002</a>, or paste a product page URL from LCSC or JLCPCB.
+        Try <a href="/p/C1002">C1002</a>, or paste a product page URL from LCSC or JLCPCB. Or
+        see the <Link to="/trends">overall price index</Link>.
       </p>
       {status && (
         <p className="status">

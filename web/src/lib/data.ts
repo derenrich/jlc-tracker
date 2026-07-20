@@ -39,6 +39,17 @@ export interface Status {
   partCount: number;
 }
 
+// One day of the overall price index (see ingest/src/index-series.mjs):
+// chained equal-weighted geometric index (100 = first tracked day), median
+// unit price, part count, total stock.
+export interface IndexPoint {
+  d: string;
+  i: number;
+  m: number | null;
+  n: number;
+  s: number;
+}
+
 export async function getPart(code: string): Promise<Part | null> {
   if (DEMO) return (await import('./demo')).getDemoPart(code);
   const snap = await getDoc(doc(getDb(), 'parts', code));
@@ -57,6 +68,13 @@ export async function getHistory(code: string): Promise<HistoryPoint[]> {
     }
   }
   return [...byDate.values()].sort((a, b) => a.d.localeCompare(b.d));
+}
+
+export async function getIndexSeries(): Promise<IndexPoint[]> {
+  if (DEMO) return (await import('./demo')).getDemoIndexSeries();
+  const snap = await getDoc(doc(getDb(), 'meta', 'index'));
+  const entries = (snap.data()?.entries ?? []) as IndexPoint[];
+  return entries.sort((a, b) => a.d.localeCompare(b.d));
 }
 
 export async function getStatus(): Promise<Status | null> {
