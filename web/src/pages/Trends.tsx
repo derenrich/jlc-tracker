@@ -36,8 +36,15 @@ export default function Trends() {
   );
 
   const latest = series[series.length - 1];
+  const first = series[0];
   const changePct =
-    series.length > 1 ? ((latest.i / series[0].i - 1) * 100).toFixed(2) : null;
+    series.length > 1 ? ((latest.i / first.i - 1) * 100).toFixed(2) : null;
+  const spanDays =
+    series.length > 1
+      ? (new Date(latest.d).getTime() - new Date(first.d).getTime()) / 86_400_000
+      : 0;
+  const annualizedPct =
+    spanDays > 0 ? ((Math.pow(latest.i / first.i, 365 / spanDays) - 1) * 100).toFixed(1) : null;
 
   return (
     <>
@@ -67,6 +74,14 @@ export default function Trends() {
                 <span className="stat-label">Since start</span>
                 <span className="stat-value">
                   {changePct === null ? '—' : `${Number(changePct) >= 0 ? '+' : ''}${changePct}%`}
+                </span>
+              </div>
+              <div className="stat">
+                <span className="stat-label">Annualized</span>
+                <span className="stat-value">
+                  {annualizedPct === null
+                    ? '—'
+                    : `${Number(annualizedPct) >= 0 ? '+' : ''}${annualizedPct}%`}
                 </span>
               </div>
               <div className="stat">
