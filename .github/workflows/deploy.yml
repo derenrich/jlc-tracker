@@ -1,0 +1,43 @@
+name: deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'web/**'
+      - 'firebase.json'
+      - 'firestore.rules'
+      - 'firestore.indexes.json'
+      - '.github/workflows/deploy.yml'
+  workflow_dispatch:
+
+concurrency: deploy
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: web/package-lock.json
+
+      - run: npm ci
+        working-directory: web
+
+      - run: npm test
+        working-directory: web
+
+      - run: npm run build
+        working-directory: web
+
+      - name: Deploy hosting and Firestore rules
+        run: |
+          echo "$FIREBASE_SERVICE_ACCOUNT" > "$RUNNER_TEMP/service-account.json"
+          npx firebase-tools deploy --only hosting,firestore --force
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          GOOGLE_APPLICATION_CREDENTIALS: ${{ runner.temp }}/service-account.json

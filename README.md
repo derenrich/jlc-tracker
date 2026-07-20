@@ -20,6 +20,9 @@ library is >7M parts, which doesn't fit a daily snapshot on a free tier.
   Functions/Scheduler, so this keeps the whole thing at $0.
 - **Web** ([web/](web/)) — Vite + React on Firebase Hosting, reading Firestore directly
   from the browser (public read-only rules).
+- **Deploys** — pushes to `main` that touch `web/` or the Firebase config redeploy
+  hosting and rules automatically ([.github/workflows/deploy.yml](.github/workflows/deploy.yml)),
+  reusing the same `FIREBASE_SERVICE_ACCOUNT` secret as the ingest.
 
 ### Firestore layout
 
