@@ -1,4 +1,5 @@
 import { useLayoutEffect, useRef, useState } from 'react';
+import { niceTicks } from '../lib/ticks';
 
 export interface ChartPoint {
   d: string; // YYYY-MM-DD
@@ -12,21 +13,6 @@ interface Props {
 
 const HEIGHT = 240;
 const PAD = { top: 12, right: 12, bottom: 24, left: 56 };
-
-function niceTicks(min: number, max: number, count = 4): number[] {
-  if (min === max) {
-    const pad = min === 0 ? 1 : Math.abs(min) * 0.1;
-    min -= pad;
-    max += pad;
-  }
-  const step = Math.pow(10, Math.floor(Math.log10((max - min) / count)));
-  const err = (max - min) / count / step;
-  const mult = err >= 7.5 ? 10 : err >= 3.5 ? 5 : err >= 1.5 ? 2 : 1;
-  const s = step * mult;
-  const ticks: number[] = [];
-  for (let t = Math.ceil(min / s) * s; t <= max + s * 1e-9; t += s) ticks.push(t);
-  return ticks;
-}
 
 const dateMs = (d: string) => new Date(`${d}T00:00:00Z`).getTime();
 
