@@ -4,6 +4,7 @@ import PriceChart, { ChartPoint } from '../components/PriceChart';
 import SearchBox from '../components/SearchBox';
 import { getHistory, getPart, HistoryPoint, Part } from '../lib/data';
 import { compact, count, usd } from '../lib/format';
+import { withReferral } from '../lib/links';
 
 const RANGES = [
   { label: '3m', days: 92 },
@@ -77,7 +78,7 @@ export default function PartPage() {
               extended parts (about 1,600 components) are followed.
             </p>
             <p>
-              <a href={`https://jlcpcb.com/parts/componentSearch?searchTxt=${code}`}>
+              <a href={withReferral(`https://jlcpcb.com/parts/componentSearch?searchTxt=${code}`)}>
                 Look it up on JLCPCB
               </a>
             </p>
@@ -108,7 +109,7 @@ export default function PartPage() {
                     </a>
                   )}
                   {part.jlcUrl && (
-                    <a href={part.jlcUrl} target="_blank" rel="noreferrer">
+                    <a href={withReferral(part.jlcUrl)} target="_blank" rel="noreferrer">
                       JLCPCB
                     </a>
                   )}
