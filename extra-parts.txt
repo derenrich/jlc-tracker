@@ -1,0 +1,7 @@
+# Extra parts to track, beyond the basic + preferred-extended libraries.
+# One LCSC code per line; `#` starts a comment. Parts start accumulating
+# history from the first ingest run after they're added.
+C42415655
+C42411118
+C2040
+C2988369

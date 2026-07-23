@@ -84,6 +84,20 @@ export async function fetchAllComponents(query = DEFAULT_QUERY, { pageSize = 100
   return { pages, components: [...byCode.values()] };
 }
 
+// Looks up a single part by exact code via the keyword search. Returns the
+// raw API response with the result list narrowed to the exact match (so it
+// can be archived alongside regular pages), or null if not found.
+export async function fetchComponentByCode(code) {
+  const query = { ...DEFAULT_QUERY, keyword: code, componentLibraryType: '', preferredComponentFlag: false };
+  const resp = await fetchPage(query, 1, 10);
+  const item = resp.data.componentPageInfo.list.find(
+    (i) => i.componentCode.toUpperCase() === code.toUpperCase()
+  );
+  if (!item) return null;
+  resp.data.componentPageInfo.list = [item];
+  return resp;
+}
+
 // Downloads a part thumbnail while its signed URL is still valid and returns
 // a data URI, or null if unavailable. JLCPCB image URLs expire after ~30
 // minutes, so images cannot be hot-linked and are stored at ingest time.

@@ -6,13 +6,13 @@
 // Credentials: set FIREBASE_SERVICE_ACCOUNT to the service-account JSON
 // itself, or GOOGLE_APPLICATION_CREDENTIALS to a path to it.
 
-import { mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { brotliCompressSync, constants as zlibConstants } from 'node:zlib';
 
 import { computeIndexSeries } from './index-series.mjs';
-import { DEFAULT_QUERY, fetchAllComponents, fetchImageDataUri } from './jlc.mjs';
+import { DEFAULT_QUERY, fetchAllComponents, fetchComponentByCode, fetchImageDataUri } from './jlc.mjs';
 import { historyEntry, partDoc } from './part-doc.mjs';
 
 const dryRun = process.argv.includes('--dry-run');
@@ -29,6 +29,31 @@ const { pages, components } = await fetchAllComponents(DEFAULT_QUERY, { log });
 log(`fetched ${components.length} components`);
 if (components.length < 100) {
   throw new Error(`suspiciously few components (${components.length}); aborting before overwriting anything`);
+}
+
+// Watchlist: extra parts from extra-parts.txt (one code per line, # comments).
+// Their raw responses are archived alongside the regular pages, so history,
+// backfill, and the index pick them up with no special handling.
+const extraPath = join(repoRoot, 'extra-parts.txt');
+if (existsSync(extraPath)) {
+  const have = new Set(components.map((c) => c.componentCode));
+  const codes = readFileSync(extraPath, 'utf8')
+    .split('\n')
+    .map((line) => line.split('#')[0].trim().toUpperCase())
+    .filter((code) => code && /^C\d+$/.test(code));
+  for (const code of codes) {
+    if (have.has(code)) continue;
+    await new Promise((r) => setTimeout(r, 700));
+    const resp = await fetchComponentByCode(code);
+    if (!resp) {
+      log(`WARNING: watchlist part ${code} not found; skipping`);
+      continue;
+    }
+    pages.push(resp);
+    components.push(resp.data.componentPageInfo.list[0]);
+    have.add(code);
+  }
+  log(`watchlist processed (${codes.length} codes); total now ${components.length} components`);
 }
 
 // --- raw archive ---------------------------------------------------------
@@ -103,7 +128,11 @@ log(`${needImage.length} parts need an image`);
 const images = new Map();
 for (let i = 0; i < needImage.length; i += 8) {
   const batch = needImage.slice(i, i + 8);
-  const results = await Promise.all(batch.map((c) => fetchImageDataUri(c.minImageAccessIdUrl)));
+  // Most parts have a (signed, expiring) JLCPCB image URL; some only carry
+  // LCSC CDN thumbnails in minImage / componentImageUrl.
+  const results = await Promise.all(
+    batch.map((c) => fetchImageDataUri(c.minImageAccessIdUrl || c.minImage || c.componentImageUrl))
+  );
   batch.forEach((c, j) => results[j] && images.set(c.componentCode, results[j]));
 }
 log(`downloaded ${images.size} images`);

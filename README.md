@@ -90,5 +90,8 @@ collection can start before the site (or the Firebase project) exists:
 
 - The ingest query lives in `DEFAULT_QUERY` in [ingest/src/jlc.mjs](ingest/src/jlc.mjs);
   widen it there if you ever want a different slice of the catalog (mind the write quota).
+- Individual extra parts (beyond basic/preferred) can be watched by adding their LCSC
+  codes to [extra-parts.txt](extra-parts.txt); history starts accumulating from the next
+  ingest run. Watched parts participate in the price index like any other tracked part.
 - `run.sh` / `run.json` at the repo root are the original captured API call and sample
   response the project was built from.
