@@ -37,23 +37,34 @@ export const DEFAULT_QUERY = {
 
 const sleep = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function fetchPage(query, currentPage, pageSize, { retries = 3 } = {}) {
+async function fetchPage(query, currentPage, pageSize, { retries = 5 } = {}) {
   for (let attempt = 1; ; attempt++) {
     try {
       const res = await fetch(API_URL, {
         method: 'POST',
         headers: HEADERS,
         body: JSON.stringify({ ...query, currentPage, pageSize }),
+        // Fail hung requests quickly (and retryably) instead of stalling on
+        // the runtime's 5-minute stream timeout.
+        signal: AbortSignal.timeout(30_000),
       });
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      if (!res.ok) {
+        const err = new Error(`HTTP ${res.status}`);
+        // 429 and 5xx are transient; other 4xx won't heal with retries.
+        err.fatal = res.status < 500 && res.status !== 429;
+        throw err;
+      }
       const body = await res.json();
       if (body.code !== 200 || !body.data?.componentPageInfo) {
         throw new Error(`unexpected response code ${body.code}: ${body.message ?? ''}`);
       }
       return body;
     } catch (err) {
-      if (attempt >= retries) throw err;
-      await sleep(2000 * attempt);
+      if (err.fatal || attempt >= retries) throw err;
+      // Exponential backoff with jitter: ~3s, ~6s, ~12s, ~24s.
+      const delay = Math.min(60_000, 3000 * 2 ** (attempt - 1)) * (0.5 + Math.random());
+      console.warn(`[jlc] page ${currentPage}: ${err.message}; retry ${attempt}/${retries - 1} in ${Math.round(delay / 1000)}s`);
+      await sleep(delay);
     }
   }
 }
